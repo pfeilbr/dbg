@@ -48,10 +48,18 @@ app.get('/keys', function(req, res) {
 
 
 app.get('/get/:key', function(req, res) {
-  client.get(req.params.key, function(err, val) {
-    if (err || val === null) { return res.status(404); }
-    res.send(val);
-  })
+  if (req.params.key === 'isales-assessment') {
+    res.send({
+      remoteInjectEnabled: true,
+      remoteInjectScriptURL: 'http://192.168.1.2/js/live.js'
+    });
+  } else {
+    client.get(req.params.key, function(err, val) {
+      if (err || val === null) { return res.status(404); }
+      res.send(val);
+    })
+  }
+
 });
 
 app.get('/localip', function(req, res) {
