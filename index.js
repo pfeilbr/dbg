@@ -51,7 +51,7 @@ app.get('/get/:key', function(req, res) {
   if (req.params.key === 'isales-assessment') {
     res.send({
       remoteInjectEnabled: true,
-      remoteInjectScriptURL: 'http://192.168.1.2/js/live.js'
+      remoteInjectScriptURL: 'http://192.168.1.2:8081/js/live.js'
     });
   } else {
     client.get(req.params.key, function(err, val) {
