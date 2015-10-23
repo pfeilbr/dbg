@@ -14,6 +14,8 @@ var errorHandler = require('errorhandler');
 
 var app = express();
 
+var client = require('redis').createClient(process.env.REDIS_URL);
+
 // all environments
 app.set('port', process.env.PORT || 5000);
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +30,33 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(multer());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/set', function(req, res) {
+  console.log(req.body);
+  client.set(req.body.key, req.body.value, function(err, val) {
+    console.log(val);
+    res.send(val);
+  })
+});
+
+app.get('/keys', function(req, res) {
+  client.keys('*', function(err, val) {
+    console.log(val);
+    res.send(val);
+  })
+});
+
+
+app.get('/get/:key', function(req, res) {
+  client.get(req.params.key, function(err, val) {
+    if (err || val === null) { return res.status(404); }
+    res.send(val);
+  })
+});
+
+app.get('/localip', function(req, res) {
+  res.json('192.168.1.2');
+});
 
 //app.get('/', routes.index);
 //app.get('/users', user.list);

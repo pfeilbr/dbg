@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h1>Debug</h1>
-  </body>
+<html ng-app="app">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  <h1>Debug</h1>
+  <div ng-controller="MainCtrl as ctrl">
+
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+  <script type="text/javascript">
+    angular.module('app', [])
+      .controller('MainCtrl', function($http) {
+        var ctrl = this;
+        $http.get('/get/localip').then(function(res) {
+          console.log(res.data);
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+      });
+  </script>
+</body>
+
 </html>
