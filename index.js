@@ -14,7 +14,12 @@ var errorHandler = require('errorhandler');
 
 var app = express();
 
-var client = require('redis').createClient(process.env.REDIS_URL);
+var client = null;
+
+try {
+  client = require('redis').createClient(process.env.REDIS_URL);
+} catch (e) { console.error(e);}
+
 
 // all environments
 app.set('port', process.env.PORT || 5000);
@@ -62,12 +67,14 @@ app.get('/get/:key', function(req, res) {
 
 });
 
+app.get('/broadcast/:msg', function(req, res) {
+  io.emit('msg', req.params.msg)
+  res.json(req.params.msg)
+})
+
 app.get('/localip', function(req, res) {
   res.json('192.168.1.2');
 });
-
-//app.get('/', routes.index);
-//app.get('/users', user.list);
 
 // error handling middleware should be loaded after the loading the routes
 if ('development' == app.get('env')) {
@@ -75,6 +82,12 @@ if ('development' == app.get('env')) {
 }
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+  console.log('websocket connected');
+});
+
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
