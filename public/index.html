@@ -30,7 +30,24 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-        socket.on('msg', function(msg) { console.log(msg); })
+        socket.on('msg', function(msg) {
+          console.log(msg);
+
+          if (typeof msg === 'object') {
+            if (msg.type === 'eval') {
+              console.log('evaling', msg.code)
+              eval(msg.code)
+            }
+          } else if (msg === 'reload') {
+            console.log('reloading page')
+            location.href = location.href;
+          }
+
+
+        })
+
+
+
     </script>
 </body>
 

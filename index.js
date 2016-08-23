@@ -67,6 +67,11 @@ app.get('/get/:key', function(req, res) {
 
 });
 
+app.post('/broadcast/json', function(req, res) {
+  io.emit('msg', req.body)
+  res.json(req.body);
+})
+
 app.get('/broadcast/:msg', function(req, res) {
   io.emit('msg', req.params.msg)
   res.json(req.params.msg)
